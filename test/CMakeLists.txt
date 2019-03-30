@@ -1,5 +1,5 @@
 add_executable(queues_test_app
-	queues_test.cpp)
+	spmc_naive_fifo_test.cpp)
 
 target_link_libraries(queues_test_app
     queues
