@@ -6,17 +6,29 @@
 #include<condition_variable>
 
 template<typename T>
-class spmc_naive_fifo
+class mpmc_naive_fifo
 {
 public:
     template<typename... Args>
-        void push(Args&&... args)
+        void push_wake_all(Args&&... args)
         {
             std::unique_lock<std::mutex> lock(mutex);
             queue.emplace(std::forward<Args>(args)...);
             lock.unlock();
             cv.notify_all();
         }
+
+    template<typename... Args>
+        void push_wake_one(Args&&... args)
+        {
+            std::unique_lock<std::mutex> lock(mutex);
+            queue.emplace(std::forward<Args>(args)...);
+            lock.unlock();
+            cv.notify_one();
+        }
+
+    template<typename... Args>
+        void push(Args&&... args) { push_wake_one(std::forward<Args>(args)...); }
 
     T pop()
     {

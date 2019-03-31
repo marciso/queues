@@ -51,7 +51,7 @@ class spsc_bounded_fifo
                 return 0;
             }
 
-        constexpr size_t capacity() const { return N-1; }
+        constexpr size_t INLINE capacity() const { return N-1; }
 
         spsc_bounded_fifo()
         {
@@ -62,24 +62,20 @@ class spsc_bounded_fifo
         }
 
     private:
-        void HOT produce_at(size_t n, T && x) { buffer[n] = std::move(x); }
-        void HOT produce_at(size_t n, T const& x) { buffer[n] = x; }
+        void HOT INLINE produce_at(size_t n, T && x) { buffer[n] = std::move(x); }
+        void HOT INLINE produce_at(size_t n, T const& x) { buffer[n] = x; }
 
-        constexpr static inline size_t mask()
+        constexpr static inline size_t HOT INLINE mask()
         {
             static_assert( N > 1 && is_power_of_2(N), "N expected to be power of 2");
             return N - 1;
         }
 
-        size_t HOT increment(size_t n) const {
-            constexpr if (is_power_of_2(N))
-            {
-                return (n+1) & mask();
-            }
-            else
-            {
-                return ((n+1) >= N) ? 0 : (n+1);
-            }
+        static inline size_t HOT INLINE increment(size_t n)
+        {
+            static_assert( N > 1 && is_power_of_2(N), "N expected to be power of 2");
+            return (n+1) & mask();
+            // otherwise: return ((n+1) >= N) ? 0 : (n+1);
         }
 
         // each variable on separate cache line

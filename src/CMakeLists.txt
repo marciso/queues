@@ -1,7 +1,8 @@
 
 add_library(queues STATIC
     spsc_bounded_fifo.hpp
-    spmc_naive_fifo.hpp
+    mpmc_naive_fifo.hpp
+    mpmc_bounded_fifo.hpp
     priority_queue_bounded.hpp
     utils.hpp
     utils.cpp
