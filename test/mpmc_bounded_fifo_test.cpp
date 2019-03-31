@@ -11,7 +11,7 @@
 TEST(mpmc_bounded_fifo_test, single_thread)
 {
     struct T { int x; T(int x = 0):x(x){} };
-    constexpr int N = 1000;
+    constexpr size_t N = 1000;
     mpmc_bounded_fifo<T, 1024> queue;
     queue.register_this_thread();
 
@@ -31,7 +31,7 @@ TEST(mpmc_bounded_fifo_test, single_thread)
 TEST(mpmc_bounded_fifo_test, threaded_1p1c)
 {
     struct T { int x; T(int x = 0):x(x){} };
-    constexpr int N = 1000;
+    constexpr size_t N = 1000;
     mpmc_bounded_fifo<T, 1024> queue;
 
     // create contention point but spawning N consumers,
@@ -62,7 +62,7 @@ TEST(mpmc_bounded_fifo_test, threaded_1p1c)
     consumer.join();
 }
 
-using param = std::tuple<int, int, int>;
+using param = std::tuple<size_t, size_t, size_t>;
 class mpmc_bounded_fifo_test_p : public ::testing::TestWithParam<param> {};
 
 TEST_P(mpmc_bounded_fifo_test_p, threaded)

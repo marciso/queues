@@ -6,7 +6,10 @@ set(CMAKE_CXX_STANDARD 17)
 enable_testing()
 
 option(USE_GTEST "Enable testing" ON)
-option(USE_BENCHMARK "Enable benchmarking" OFF)
+option(USE_BENCHMARK "Enable benchmarking" ON)
+
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Wextra -march=native -O3")
+SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,now")
 
 if(USE_GTEST OR USE_BENCHMARK)
     enable_testing()

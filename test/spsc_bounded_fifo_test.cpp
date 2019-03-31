@@ -11,7 +11,7 @@
 TEST(spsc_bounded_fifo_test, single_thread)
 {
     struct T { int x; T(int x = 0):x(x){} };
-    constexpr int N = 1000;
+    constexpr size_t N = 1000;
     spsc_bounded_fifo<T, 1024> queue;
 
     for(size_t i = 0; i < N; ++i)
@@ -30,7 +30,7 @@ TEST(spsc_bounded_fifo_test, single_thread)
 TEST(spsc_bounded_fifo_test, threaded_1c1p)
 {
     struct T { int x; T(int x = 0):x(x){} };
-    constexpr int N = 1000;
+    constexpr size_t N = 1000;
     spsc_bounded_fifo<T, 1024> queue;
 
     // create contention point but spawning N consumers,

@@ -24,10 +24,10 @@ class mpmc_bounded_fifo
                 pos().head = head.load(std::memory_order_relaxed);
                 pos().head = head.fetch_add(1); // reserve
 
-                if( pos().head >= last.tail + N )
+                if( pos().head >= last_tail + N )
                     do {
-                        last.tail = get_min_tail();
-                        if ( pos().head < last.tail + N ) break;
+                        last_tail = get_min_tail();
+                        if ( pos().head < last_tail + N ) break;
                         yield();
                     } while(true);
 
@@ -40,10 +40,10 @@ class mpmc_bounded_fifo
             pos().tail = tail.load(std::memory_order_relaxed);
             pos().tail = tail.fetch_add(1); // claim we will use it
 
-            if ( pos().tail >= last.head )
+            if ( pos().tail >= last_head )
                 do {
-                    last.head = get_min_head();
-                    if ( pos().tail < last.head ) break;
+                    last_head = get_min_head();
+                    if ( pos().tail < last_head ) break;
                     yield();
                 } while(true);
 
@@ -129,11 +129,12 @@ class mpmc_bounded_fifo
 
 
         // each variable on separate cache line
-        alignas(64) thread_info last {0, 0};
         alignas(64) std::atomic<size_t> tail;
+        size_t last_head = 0;
         alignas(64) std::array<T, N> buffer;
         alignas(64) std::array<thread_info, std::max(PRODUCERS, CONSUMERS)> thread_positions;
         alignas(64) std::atomic<size_t> head;
+        size_t last_tail = 0;
 
         alignas(64) size_t thread_idx = 0;
         std::mutex thread_mutex;

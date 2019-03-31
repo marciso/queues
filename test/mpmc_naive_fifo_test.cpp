@@ -105,7 +105,7 @@ TEST(mpmc_naive_fifo_test, threaded_1000c1p_notify_all)
     EXPECT_EQ(2*N, consumed);
 }
 
-using param = std::tuple<int, int, int>;
+using param = std::tuple<size_t, size_t, size_t>;
 class mpmc_naive_fifo_test_p : public ::testing::TestWithParam<param> {};
 
 TEST_P(mpmc_naive_fifo_test_p, threaded)
@@ -186,6 +186,6 @@ INSTANTIATE_TEST_CASE_P(producer_consumer, mpmc_naive_fifo_test_p,
             param(16,1, 1000),
             param(16,16, 1000),
             param(100,10,100),
-            param(50,50,10),
-            param(1,1000,1000) // 1 porducer, 1K consumers
+            param(50,50,10)
+            // param(1,1000,1000) // 1 porducer, 1K consumers (take too long: 22 secs)
             ));
